@@ -1,0 +1,54 @@
+给定一个长度为 n 的整数数组，你的任务是判断在最多改变 1 个元素的情况下，该数组能否变成一个非递减数列。
+
+我们是这样定义一个非递减数列的： 对于数组中所有的 i (1 <= i < n)，满足 array[i] <= array[i + 1]。
+
+示例 1:
+
+输入: [4,2,3]
+输出: True
+解释: 你可以通过把第一个4变成1来使得它成为一个非递减数列。
+
+示例 2:
+
+输入: [4,2,1]
+输出: False
+解释: 你不能在只改变一个元素的情况下将其变为非递减数列。
+
+说明:  n 的范围为 [1, 10,000]。
+
+解题思路：数组长度小于3的情况下肯定可以只改变一个元素就将其变为非递减数列。
+         当数组长度大于等于3时，先对索引为0,1,2的前三个数进行判断：如果nums[0]>nums[1]>nums[2],这种情况返回false；
+如果nums[0]>nums[1]&&nums[1]<=nums[2],令nums[0]=nums[1]，同时断点数+1;(这样做是为了处理三个数中第一个数大于第二个数的情况)
+         接下来对连续三个数进行判断：如果nums[i]>nums[i+1]说明出现断点（经过上面的处理后，此时肯定满足nums[i-1]<=nums[i]），
+需要更改元素：比较nums[i-1]和nums[i+1]大小来更改：nums[i-1]<=nums[i+1]?nums[i]=nums[i-1]:nums[i+1]=nums[i];
+         如果程序最后的count大于1，说明更改超过一个元素，返回false；否则返回true。
+         
+
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+        if(nums.size()<3){
+            return true;
+        }
+        int count = 0;
+        if(nums[0]>nums[1]&&nums[1]>nums[2]){
+            return false;
+        }
+        if(nums[0]>nums[1]&&nums[1]<=nums[2]){
+            count++;
+            nums[0]=nums[1];
+        }
+        for(int i=1;i<=nums.size()-2;i++){
+            if(nums[i]>nums[i+1]){
+                count++;
+                nums[i-1]<=nums[i+1]?nums[i]=nums[i-1]:nums[i+1]=nums[i];
+            }
+        }
+        if(count>1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+};
